@@ -10,7 +10,7 @@ MFRC522 rfid(rfid_SS_PIN, rfid_RST_PIN);
 
 unsigned long lastMillis;
 int lastCardCountdown = 0;
-byte lastCardUID[4];
+unsigned long lastCardUID;
 
 void setup() {
 
@@ -34,35 +34,34 @@ void loop() {
 
     if (rfid.PICC_ReadCardSerial()) {
 
-      if (!are_uids_equal(lastCardUID, rfid.uid.uidByte) || lastCardCountdown <= 0) {
+      unsigned long curCardUID = uid_to_long(rfid.uid.uidByte);
+
+      if (lastCardUID != curCardUID || lastCardCountdown <= 0) {
         lastCardCountdown = 5000;
-        
-        for (int i = 0; i < 3; i++) {
-          lastCardUID[i] = rfid.uid.uidByte[i]; //copy UID into lastcarduid
-        }
+        lastCardUID = curCardUID;
 
         Serial.print("Card UID: ");
-        print_byte_array(rfid.uid.uidByte, rfid.uid.size); //print UID of card
-        Serial.println();
+        Serial.println(lastCardUID, HEX);
+        
+        scan_card();
       }
-
     }
-
   }
+}
 
 
+void scan_card() {
 
 }
 
-// Checks if two UIDs are equal.
-bool are_uids_equal(byte uid1[4], byte uid2[4]) {
-  for (int i = 0; i < 3; i++) {
-    if (uid1[i] != uid2[i]) {
-      return false;
-    }
-  }
-
-  return true;
+// Converts uids into a single value.
+unsigned long uid_to_long(byte uid[4]) {
+  unsigned long val = 0;
+  val += (long)uid[0] << 24;
+  val += (long)uid[1] << 16;
+  val += (long)uid[2] << 8;
+  val += (long)uid[3];
+  return val;
 }
 
 // Prints byte arrays to the serial monitor.
