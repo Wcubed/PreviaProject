@@ -1,4 +1,3 @@
-#include <EEPROM.h>
 #include <SoftwareSerial.h>
 #include <SD.h>
 #include <SPI.h>
@@ -22,8 +21,6 @@ void setup() {
   Serial.begin(115200);
   SPI.begin();
   rfid.PCD_Init();
-
-
 
 }
 
