@@ -14,9 +14,15 @@ bool eeprom_add_uid(long uid) {
       EEPROM.get(UID_ADR + i * UID_TYPE_LENGTH, curUID);
       if (curUID == 0) {
         EEPROM.put(UID_ADR + i * UID_TYPE_LENGTH, uid);
+        // UID was succesfully added.
+        return true;
       }
     }
+    // Array is full! error!
+    return false;
   }
+  // UID already exists in the array.
+  return true;
 }
 
 //checks if a certain UID is checked in or not.

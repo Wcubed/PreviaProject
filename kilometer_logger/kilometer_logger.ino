@@ -23,7 +23,6 @@ void setup() {
   SPI.begin();
   rfid.PCD_Init();
 
-  eeprom_init();
 }
 
 void loop() {
@@ -55,25 +54,38 @@ void loop() {
         Serial.println(lastCardUID, HEX);
 
         // The actual checking in or out.
-        scan_card();
+        handle_card(curCardUID);
       }
     }
   }
 }
 
-
-void scan_card() {
+//check in or check out depending on situation
+void handle_card(long uid) {
   MFRC522::MIFARE_Key UID_key;
   for (byte i = 0; i < 6; i++) UID_key.keyByte[i] = 0xFF;
 
   MFRC522::StatusCode status;
   status = rfid.PCD_Authenticate(rfid.PICC_CMD_MF_AUTH_KEY_A, UID_Block, &UID_key, &(rfid.uid));
-  if (status != rfid.STATUS_OK) {
-    //do something to show that something went wrong.
-    return;
+  if (status == rfid.STATUS_OK) {
+    if (eeprom_check_uid(uid)) {
+      //kilometervereffeningcode
+
+      //check out
+      eeprom_delete_uid(uid);
+      Serial.println("uitgecheckt");
+    } else {
+      //kilometervereffeningcode
+
+      //check in
+      if (eeprom_add_uid(uid)) {
+        Serial.println("ingecheckt");
+      } else {
+        //beep beep code
+        Serial.println("array is full, did not check in");
+      }
+    }
   }
-  
-  
 
   rfid.PCD_StopCrypto1();
 }
