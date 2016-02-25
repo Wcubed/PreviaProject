@@ -1,3 +1,4 @@
+#include <EEPROM.h>
 #include <SoftwareSerial.h>
 #include <SD.h>
 #include <SPI.h>
