@@ -38,19 +38,23 @@ void loop() {
     lastCardCountdown -= dt;
   }
 
+  // Is there a card available.
   if (rfid.PICC_IsNewCardPresent()) {
 
     if (rfid.PICC_ReadCardSerial()) {
 
       unsigned long curCardUID = uid_to_long(rfid.uid.uidByte);
 
+      // Is this a new card, or has enough time passed.
       if (lastCardUID != curCardUID || lastCardCountdown <= 0) {
+        // Reset the countdown.
         lastCardCountdown = 5000;
         lastCardUID = curCardUID;
 
         Serial.print("Card UID: ");
         Serial.println(lastCardUID, HEX);
 
+        // The actual checking in or out.
         scan_card();
       }
     }
