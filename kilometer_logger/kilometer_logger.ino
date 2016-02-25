@@ -23,7 +23,7 @@ void setup() {
   SPI.begin();
   rfid.PCD_Init();
 
-
+  eeprom_init();
 
 }
 
