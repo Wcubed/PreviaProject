@@ -4,8 +4,8 @@
 #include <SPI.h>
 #include <MFRC522.h>
 
-const int rfid_RST_PIN = 9;           // Configurable, see typical pin layout above
-const int rfid_SS_PIN = 8;            // Configurable, see typical pin layout above
+const int rfid_RST_PIN = 9;
+const int rfid_SS_PIN = 8;
 
 const int UID_Block = 8;
 
@@ -22,6 +22,8 @@ void setup() {
   Serial.begin(115200);
   SPI.begin();
   rfid.PCD_Init();
+
+  Serial.println("Previa Ready To Roll, Scan Your Card!");
 
 }
 
