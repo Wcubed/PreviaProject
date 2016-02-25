@@ -1,3 +1,4 @@
+#include <EEPROM.h>
 #include <SoftwareSerial.h>
 #include <SD.h>
 #include <SPI.h>
@@ -22,11 +23,7 @@ void setup() {
   SPI.begin();
   rfid.PCD_Init();
 
-<<<<<<< HEAD
-=======
   eeprom_init();
-
->>>>>>> 2505341eaa74d717a802614b534a493b2c5aea45
 }
 
 void loop() {
